@@ -1,0 +1,127 @@
+---
+resources:
+- name: version
+  type: semver
+  source:
+    driver: git
+    initial_version: 0.0.0
+    uri: ((ranger6-git-url))
+    branch: version
+    file: version
+    private_key: ((ranger6-git-private-key))
+
+- name: config
+  type: git
+  source:
+    uri: ((ranger6-git-url))
+    branch: version
+    private_key: ((ranger6-git-private-key))
+
+- name: develop
+  type: git
+  source:
+    uri: ((ranger6-git-url))
+    branch: develop
+    private_key: ((ranger6-git-private-key))
+
+- name: master
+  type: git
+  source:
+    uri: ((ranger6-git-url))
+    branch: master
+    private_key: ((ranger6-git-private-key))
+
+- name: release
+  type: git
+  source:
+    uri: ((ranger6-git-url))
+    branch: ((release-branch))
+    private_key: ((ranger6-git-private-key))
+
+jobs:
+- name: prepare-release
+  public: true
+  plan:
+  - get: release
+    trigger: true
+  - task: unit
+    file: release/ci/unit/unit.yml
+  - get: version
+    params: {pre: rc}
+  - task: prepare
+    file: release/ci/prepare/prepare.yml
+  - put: release
+    params:
+        repository: release
+        tag: version/version
+        only_tag: true
+        annotate: prerel/tag_annotation
+  - put: version
+    params: {pre: rc}
+
+- name: release
+  public: true
+  serial_groups: [publish]
+  plan:
+  - get: config
+  - get: release
+    passed: [prepare-release]
+  - get: version
+    passed: [prepare-release]
+    params: {bump: final}
+  - load_var: release-config
+    file: config/release-config.json
+    format: json
+    reveal: true
+  - task: release
+    file: release/ci/release/release.yml
+    vars:
+        release-branch: "((release-branch))"
+  - put: develop
+    params:
+        repository: release
+        merge: true
+  - put: release
+    params:
+        repository: release
+        only_tag: true
+  - put: version
+    params: {bump: final}
+
+- name: update-master
+  public: true
+  serial_groups: [publish]
+  plan:
+  - get: master
+  - get: release
+    passed: [release]
+    trigger: true
+    params:
+        fetch_tags: true
+  - get: version
+    passed: [release]
+  - task: update-master
+    file: release/ci/update/update.yml
+    vars:
+        release-branch: "((release-branch))"
+  - put: master
+    params:
+        repository: master
+
+- name: clean
+  public: true
+  serial_groups: [publish]
+  plan:
+  - get: release
+    passed: [update-master]
+    params:
+        fetch_tags: true
+  - get: version
+    passed: [update-master]
+  - task: clean
+    file: release/ci/clean/clean.yml
+    vars:
+        release-branch: "((release-branch))"
+  - put: release
+    params:
+        repository: release

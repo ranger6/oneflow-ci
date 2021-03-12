@@ -1,0 +1,17 @@
+---
+platform: linux
+image_resource:
+    type: docker-image
+    source: {repository: ranger6/alpine-extras, tag: "3.13"}
+inputs:
+    - name: develop
+    - name: version
+outputs:
+    - name: release
+    - name: branch
+run:
+    path: develop/ci/start/start.sh
+    args:
+    - "version/version"
+    - "((.:release-config.branch-hash))"
+    - "((.:release-config.release-branch-prefix))"

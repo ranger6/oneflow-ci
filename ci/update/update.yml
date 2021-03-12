@@ -1,0 +1,14 @@
+---
+platform: linux
+image_resource:
+    type: docker-image
+    source: {repository: ranger6/alpine-extras, tag: "3.13"}
+inputs:
+    - name: version
+    - name: release
+    - name: master
+outputs:
+    - name: master
+run:
+    path: ./release/ci/update/update.sh
+    args: ['version/version',"((release-branch))"]
