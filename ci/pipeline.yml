@@ -125,3 +125,4 @@ jobs:
   - put: release
     params:
         repository: release
+        branch: "((release-branch))"
