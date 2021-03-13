@@ -30,7 +30,6 @@ resources:
   type: git
   source:
     uri: ((ranger6-git-url))
-    branch: develop
     private_key: ((ranger6-git-private-key))
 
 jobs:
