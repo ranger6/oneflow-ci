@@ -15,6 +15,8 @@ resources:
   source:
     uri: ((ranger6-git-url))
     branch: version
+    paths:
+    - "release-config.json"
     private_key: ((ranger6-git-private-key))
 
 - name: develop
@@ -39,15 +41,44 @@ resources:
     private_key: ((ranger6-git-private-key))
 
 jobs:
+- name: start-release
+  public: true
+  plan:
+  - get: config
+    trigger: true
+  - get: develop
+  - load_var: release-config
+    file: config/release-config.json
+    format: json
+    reveal: true
+  - get: version
+    params: {bump: ((.:release-config.release-level))}
+  - task: start
+    file: develop/ci/start/start.yml
+  - load_var: branch-config
+    file: branch/branch-config.json
+  - put: version
+    params: {bump: ((.:release-config.release-level))}
+  - put: release
+    params:
+        repository: release
+        branch: ((.:branch-config.release-branch-name))
+  - set_pipeline: self
+    file: release/ci/pipeline.yml
+    vars:
+        release-branch: "((.:branch-config.release-branch-name))"
+
 - name: prepare-release
   public: true
   plan:
   - get: release
+    passed: [start-release]
     trigger: true
+  - get: version
+    passed: [start-release]
+    params: {pre: rc}
   - task: unit
     file: release/ci/unit/unit.yml
-  - get: version
-    params: {pre: rc}
   - task: prepare
     file: release/ci/prepare/prepare.yml
   - put: release
