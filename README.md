@@ -18,7 +18,7 @@ Not much yet.  Here's what we've got:
 
 1.  The main development branch is "develop" (following the convention in oneflow)
 2.  The stable branch is "master".  The tip of master always points to the
-latest release.
+latest release. This is *one* suggestion for "oneflow" naming.
 3.  The "version" branch is used by the ci pipeline.  It is also where the
 release configuration is published to trigger new releases.  This is *not* part
 of oneflow.
@@ -28,8 +28,8 @@ one may find multiple garbage branches.
 
 ### tags
 
-Semantic versioning is used. The current ci process always creates release
-candidate tags.
+Semantic versioning is used. The current ci pipeline always creates release
+candidate tags.  This is not a requirement.
 
 ### releases
 
@@ -37,21 +37,21 @@ Only the tagging is done.  No github releases yet.
 
 ### pipelines
 
-There is a long (forever) running pipeline ("start-release" `ci/start/pipeline.yml`)
-that triggers on new release configurations pushed to the version branch.  It creates a new
-release branch and then sets the "prepare-release" pipeline (`ci/pipeline.yml`)
-that pushes the release to conclusion (or abandonment).
+"release-pipe" is mostly linear:
 
-"prepare-release" is mostly linear:
-
-1.  New versions on the release branch trigger "unit"
-2.  If tests pass, a new release candidate is tagged.
-3.  When someone decides that all is ok, "release" is manually triggered.
-4.  "release" tags the latest release candidate and merges back to the
-develop branch.
-5.  A new release triggers "update-master" that fast-forwards the master branch
+1.  New release configurations pushed to the version branch trigger the "start-release" job.
+It creates a new release branch and sets the "version" semver to the next *target* version.
+2.  It then sets `self` to an updated version of `ci/pipeline.yml`  The code does not change.
+Only the "release-branch" variable is changed to the just generated release branch.  That is,
+the "release" resource is following the newly created release branch.
+3.  New versions on the release branch trigger "prepare-release"
+4.  If tests pass, a new release candidate is tagged.
+5.  When someone decides that all is ok, the "release" job is manually triggered.
+6.  "release" tags the latest release candidate with the final target release and then merges
+the release branch back to the develop branch.
+7.  A new release triggers "update-master" that fast-forwards the master branch
 to the new release tag.
-6.  "clean" should then delete the release branch (not working yet).
+8.  "clean" should then delete the release branch (not working yet).
 
 ## dependencies
 
@@ -60,3 +60,11 @@ to the new release tag.
 3.  The [image](https://github.com/ranger6/alpine-extras) used for
 several tasks includes git and bash.
 
+## history
+
+### two pipelines
+
+An initial prototype used two pipelines: start-release and prepare-release.  This
+introduced a resource race condition.
+
+> There is a long (forever) running pipeline ("start-release" `ci/start/pipeline.yml`) that triggers on new release configurations pushed to the version branch.  It creates a new release branch and then sets the "prepare-release" pipeline (`ci/pipeline.yml`) that pushes the release to conclusion (or abandonment).
