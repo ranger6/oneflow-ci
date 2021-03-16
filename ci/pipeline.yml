@@ -81,6 +81,8 @@ jobs:
     file: release/ci/unit/unit.yml
   - task: prepare
     file: release/ci/prepare/prepare.yml
+    vars:
+        release-branch: "((release-branch))"
   - put: release
     params:
         repository: release
