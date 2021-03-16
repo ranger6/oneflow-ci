@@ -43,6 +43,7 @@ resources:
 jobs:
 - name: start-release
   public: true
+  serial_groups: [publish]
   plan:
   - get: config
     trigger: true
@@ -70,6 +71,7 @@ jobs:
 
 - name: prepare-release
   public: true
+  serial_groups: [publish]
   plan:
   - get: release
     trigger: true
