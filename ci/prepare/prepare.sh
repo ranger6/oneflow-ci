@@ -8,7 +8,8 @@ set -ex
 target_version="$(cat $1)"
 release_branch="$2"
 
-cd release
+git clone release release-out
+cd release-out
 
 git checkout "$release_branch"
 

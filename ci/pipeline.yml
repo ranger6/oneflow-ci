@@ -85,7 +85,7 @@ jobs:
         release-branch: "((release-branch))"
   - put: release
     params:
-        repository: release
+        repository: release-out
         only_tag: true
   - put: version
     params: {pre: rc}
