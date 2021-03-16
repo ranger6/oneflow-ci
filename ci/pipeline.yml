@@ -72,10 +72,8 @@ jobs:
   public: true
   plan:
   - get: release
-    passed: [start-release]
     trigger: true
   - get: version
-    passed: [start-release]
     params: {pre: rc}
   - task: unit
     file: release/ci/unit/unit.yml
