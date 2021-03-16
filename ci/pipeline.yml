@@ -84,9 +84,7 @@ jobs:
   - put: release
     params:
         repository: release
-        tag: version/version
         only_tag: true
-        annotate: prerel/tag_annotation
   - put: version
     params: {pre: rc}
 

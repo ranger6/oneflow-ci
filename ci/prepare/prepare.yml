@@ -7,7 +7,7 @@ inputs:
     - name: version
     - name: release
 outputs:
-    - name: prerel
+    - name: release
 run:
     path: ./release/ci/prepare/prepare.sh
-    args: ['version/version']
+    args: ['version/version', "((release-branch))"]
