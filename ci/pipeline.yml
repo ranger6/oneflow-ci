@@ -40,6 +40,13 @@ resources:
     branch: ((release-branch))
     private_key: ((ranger6-git-private-key))
 
+- name: release-base
+  type: git
+  source:
+    uri: ((ranger6-git-url))
+    branch: ((release-branch))
+    private_key: ((ranger6-git-private-key))
+
 jobs:
 - name: start-release
   public: true
@@ -60,7 +67,7 @@ jobs:
     file: branch/branch-config.json
   - put: version
     params: {bump: ((.:release-config.release-level))}
-  - put: release
+  - put: release-base
     params:
         repository: release
         branch: ((.:branch-config.release-branch-name))
