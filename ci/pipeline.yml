@@ -162,5 +162,5 @@ jobs:
         release-branch: "((release-branch))"
   - put: release
     params:
-        repository: release-out
+        repository: release-base
         branch: "((release-branch))"
