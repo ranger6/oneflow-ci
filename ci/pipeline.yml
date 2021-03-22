@@ -23,14 +23,14 @@ resources:
   type: git
   source:
     uri: ((concourse-git-url))
-    branch: ((main))
+    branch: ((main-branch))
     private_key: ((concourse-git-private-key))
 
 - name: stable
   type: git
   source:
     uri: ((concourse-git-url))
-    branch: ((stable))
+    branch: ((stable-branch))
     private_key: ((concourse-git-private-key))
 
 - name: release
@@ -74,7 +74,7 @@ jobs:
   - set_pipeline: self
     file: "release/ci/pipeline.yml"
     vars:
-        release-branch: "((.:release-branch.release-branch-name))"
+        release-branch: ((.:release-branch.release-branch-name))
     var_files: ["release/ci/vars.yml"]
 
 - name: prepare-release
@@ -116,7 +116,7 @@ jobs:
     file: "release/ci/release/release.yml"
     vars:
         release-branch: "((release-branch))"
-        main: "((main))"
+        main: "((main-branch))"
   - put: main
     params:
         repository: main
@@ -143,7 +143,7 @@ jobs:
     file: "release/ci/update/update.yml"
     vars:
         release-branch: "((release-branch))"
-        stable: "((stable))"
+        stable: "((stable-branch))"
   - put: stable
     params:
         repository: stable

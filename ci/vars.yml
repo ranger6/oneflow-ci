@@ -1,5 +1,5 @@
 ---
-main: develop
-stable: master
-version: version
-config: version
+main-branch: develop
+stable-branch: master
+version-branch: version
+manifest-branch: version

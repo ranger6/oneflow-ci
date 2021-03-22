@@ -11,4 +11,4 @@ outputs:
     - name: stable
 run:
     path: "./release/ci/update/update.sh"
-    args: ['version/version',"((release-branch))","((stable))"]
+    args: ['version/version',"((release-branch))","((stable-branch))"]
