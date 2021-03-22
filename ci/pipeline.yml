@@ -116,7 +116,7 @@ jobs:
     file: "release/ci/release/release.yml"
     vars:
         release-branch: "((release-branch))"
-        main: "((main-branch))"
+        main-branch: "((main-branch))"
   - put: main
     params:
         repository: main
