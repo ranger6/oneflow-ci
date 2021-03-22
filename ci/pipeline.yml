@@ -75,6 +75,7 @@ jobs:
     file: release/ci/pipeline.yml
     vars:
         release-branch: "((.:branch-config.release-branch-name))"
+    var_files: ["release/ci/vars.yml"]
 
 - name: prepare-release
   public: true
