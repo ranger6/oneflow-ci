@@ -20,4 +20,4 @@ git tag -a -m "tagging release at $target_version" "$target_version"
 cd ../develop
 
 git checkout develop
-git pull ../release "$release_branch"
+git pull --no-edit --no-rebase ../release "$release_branch"
