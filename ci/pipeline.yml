@@ -5,47 +5,47 @@ resources:
   source:
     driver: git
     initial_version: 0.0.0
-    uri: ((ranger6-git-url))
+    uri: ((concourse-git-url))
     branch: version
     file: version
-    private_key: ((ranger6-git-private-key))
+    private_key: ((concourse-git-private-key))
 
 - name: config
   type: git
   source:
-    uri: ((ranger6-git-url))
+    uri: ((concourse-git-url))
     branch: version
     paths:
     - "release-config.json"
-    private_key: ((ranger6-git-private-key))
+    private_key: ((concourse-git-private-key))
 
 - name: develop
   type: git
   source:
-    uri: ((ranger6-git-url))
+    uri: ((concourse-git-url))
     branch: develop
-    private_key: ((ranger6-git-private-key))
+    private_key: ((concourse-git-private-key))
 
 - name: master
   type: git
   source:
-    uri: ((ranger6-git-url))
+    uri: ((concourse-git-url))
     branch: master
-    private_key: ((ranger6-git-private-key))
+    private_key: ((concourse-git-private-key))
 
 - name: release
   type: git
   source:
-    uri: ((ranger6-git-url))
+    uri: ((concourse-git-url))
     branch: ((release-branch))
-    private_key: ((ranger6-git-private-key))
+    private_key: ((concourse-git-private-key))
 
 - name: release-base
   type: git
   source:
-    uri: ((ranger6-git-url))
+    uri: ((concourse-git-url))
     branch: ((release-branch))
-    private_key: ((ranger6-git-private-key))
+    private_key: ((concourse-git-private-key))
 
 jobs:
 - name: start-release
