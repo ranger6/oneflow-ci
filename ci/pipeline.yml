@@ -62,19 +62,19 @@ jobs:
     params: {bump: ((.:release-manifest.release-level))}
   - task: start
     file: "main/ci/start/start.yml"
-  - load_var: release-branch
-    file: "release-branch/vars.json"
+  - load_var: release-vars
+    file: "release-vars/vars.json"
     reveal: true
   - put: version
     params: {bump: ((.:release-manifest.release-level))}
   - put: release-base
     params:
         repository: release
-        branch: ((.:release-branch.release-branch-name))
+        branch: ((.:release-vars.release-branch-name))
   - set_pipeline: self
     file: "release/ci/pipeline.yml"
     vars:
-        release-branch: ((.:release-branch.release-branch-name))
+        release-branch: ((.:release-vars.release-branch-name))
     var_files: ["release/ci/vars.yml"]
 
 - name: prepare-release

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #       start -- when triggered, start new release branch
+#                put release branch name in vars.json
 
 set -ex
 
@@ -10,7 +11,7 @@ release_branch_prefix="$3"
 
 release_branch="${release_branch_prefix}${target_version}"
 
-echo "{\"release-branch-name\": \"${release_branch}\"}" > release-branch/vars.json
+echo "{\"release-branch-name\": \"${release_branch}\"}" > release-vars/vars.json
 
 git clone main release
 cd release
