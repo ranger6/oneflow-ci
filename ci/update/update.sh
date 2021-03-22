@@ -1,15 +1,16 @@
 #!/bin/sh
 
-#	update -- update master to latest release tag
+#	update -- update stable branch to latest release tag
 
 set -ex
 
 target_version="$(cat $1)"
 release_branch="$2"
+stable_branch="$3"
 
-cd master
+cd stable
 
-git checkout master
+git checkout $stable_branch
 git remote add -f --tags -t "$release_branch" release ../release
 
 git config --global user.email "ranger6@users.noreply.github.com"

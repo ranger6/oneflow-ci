@@ -6,7 +6,7 @@ resources:
     driver: git
     initial_version: 0.0.0
     uri: ((concourse-git-url))
-    branch: version
+    branch: ((version))
     file: version
     private_key: ((concourse-git-private-key))
 
@@ -14,23 +14,23 @@ resources:
   type: git
   source:
     uri: ((concourse-git-url))
-    branch: version
+    branch: ((config))
     paths:
     - "release-config.json"
     private_key: ((concourse-git-private-key))
 
-- name: develop
+- name: main
   type: git
   source:
     uri: ((concourse-git-url))
-    branch: develop
+    branch: ((main))
     private_key: ((concourse-git-private-key))
 
-- name: master
+- name: stable
   type: git
   source:
     uri: ((concourse-git-url))
-    branch: master
+    branch: ((stable))
     private_key: ((concourse-git-private-key))
 
 - name: release
@@ -54,7 +54,7 @@ jobs:
   plan:
   - get: config
     trigger: true
-  - get: develop
+  - get: main
   - load_var: release-config
     file: config/release-config.json
     format: json
@@ -62,7 +62,7 @@ jobs:
   - get: version
     params: {bump: ((.:release-config.release-level))}
   - task: start
-    file: develop/ci/start/start.yml
+    file: main/ci/start/start.yml
   - load_var: branch-config
     file: branch/branch-config.json
   - put: version
@@ -111,14 +111,14 @@ jobs:
     file: config/release-config.json
     format: json
     reveal: true
-  - get: develop
+  - get: main
   - task: release
     file: release/ci/release/release.yml
     vars:
         release-branch: "((release-branch))"
-  - put: develop
+  - put: main
     params:
-        repository: develop
+        repository: main
   - put: release
     params:
         repository: release
@@ -126,11 +126,11 @@ jobs:
   - put: version
     params: {bump: final}
 
-- name: update-master
+- name: update-stable
   public: true
   serial_groups: [publish]
   plan:
-  - get: master
+  - get: stable
   - get: release
     passed: [release]
     trigger: true
@@ -138,24 +138,24 @@ jobs:
         fetch_tags: true
   - get: version
     passed: [release]
-  - task: update-master
+  - task: update-stable
     file: release/ci/update/update.yml
     vars:
         release-branch: "((release-branch))"
-  - put: master
+  - put: stable
     params:
-        repository: master
+        repository: stable
 
 - name: clean
   public: true
   serial_groups: [publish]
   plan:
   - get: release
-    passed: [update-master]
+    passed: [update-stable]
     params:
         fetch_tags: true
   - get: version
-    passed: [update-master]
+    passed: [update-stable]
   - task: clean
     file: release/ci/clean/clean.yml
     vars:

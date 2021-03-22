@@ -12,7 +12,7 @@ release_branch="${release_branch_prefix}${target_version}"
 
 echo "{\"release-branch-name\": \"${release_branch}\"}" > branch/branch-config.json
 
-git clone develop release
+git clone main release
 cd release
 git checkout -b "$release_branch" "$branch_hash"
 

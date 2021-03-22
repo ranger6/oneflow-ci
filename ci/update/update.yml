@@ -6,9 +6,9 @@ image_resource:
 inputs:
     - name: version
     - name: release
-    - name: master
+    - name: stable
 outputs:
-    - name: master
+    - name: stable
 run:
     path: ./release/ci/update/update.sh
-    args: ['version/version',"((release-branch))"]
+    args: ['version/version',"((release-branch))","((stable))"]

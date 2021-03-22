@@ -1,0 +1,5 @@
+---
+main: develop
+stable: master
+version: version
+config: version
