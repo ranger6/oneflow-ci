@@ -1,6 +1,6 @@
 {
-	"branch-hash": "3786ef4",
+	"branch-hash": "7b3649e",
 	"release-branch-prefix": "release/",
-	"release-level": "major",
+	"release-level": "minor",
 	"merge-branch": "develop"
 }
