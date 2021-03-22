@@ -6,8 +6,10 @@ image_resource:
 inputs:
     - name: version
     - name: release
+    - name: develop
 outputs:
     - name: release
+    - name: develop
 run:
     path: ./release/ci/release/release.sh
     args: ['version/version', "((release-branch))", "((.:release-config.merge-branch))"]
