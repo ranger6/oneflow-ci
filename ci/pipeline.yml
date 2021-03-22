@@ -143,7 +143,7 @@ jobs:
     file: "release/ci/update/update.yml"
     vars:
         release-branch: "((release-branch))"
-        stable: "((stable-branch))"
+        stable-branch: "((stable-branch))"
   - put: stable
     params:
         repository: stable
