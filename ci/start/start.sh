@@ -10,7 +10,7 @@ release_branch_prefix="$3"
 
 release_branch="${release_branch_prefix}${target_version}"
 
-echo "{\"release-branch-name\": \"${release_branch}\"}" > branch/branch-config.json
+echo "{\"release-branch-name\": \"${release_branch}\"}" > release-branch/vars.json
 
 git clone main release
 cd release

@@ -6,17 +6,17 @@ resources:
     driver: git
     initial_version: 0.0.0
     uri: ((concourse-git-url))
-    branch: ((version))
-    file: version
+    branch: ((version-branch))
+    file: "version"
     private_key: ((concourse-git-private-key))
 
-- name: config
+- name: manifest
   type: git
   source:
     uri: ((concourse-git-url))
-    branch: ((config))
+    branch: ((manifest-branch))
     paths:
-    - "release-config.json"
+    - "release-manifest.json"
     private_key: ((concourse-git-private-key))
 
 - name: main
@@ -52,29 +52,29 @@ jobs:
   public: true
   serial_groups: [publish]
   plan:
-  - get: config
+  - get: manifest
     trigger: true
   - get: main
-  - load_var: release-config
-    file: config/release-config.json
-    format: json
+  - load_var: release-manifest
+    file: "manifest/release-manifest.json"
     reveal: true
   - get: version
-    params: {bump: ((.:release-config.release-level))}
+    params: {bump: ((.:release-manifest.release-level))}
   - task: start
-    file: main/ci/start/start.yml
-  - load_var: branch-config
-    file: branch/branch-config.json
+    file: "main/ci/start/start.yml"
+  - load_var: release-branch
+    file: "release-branch/vars.json"
+    reveal: true
   - put: version
-    params: {bump: ((.:release-config.release-level))}
+    params: {bump: ((.:release-manifest.release-level))}
   - put: release-base
     params:
         repository: release
-        branch: ((.:branch-config.release-branch-name))
+        branch: ((.:release-branch.release-branch-name))
   - set_pipeline: self
-    file: release/ci/pipeline.yml
+    file: "release/ci/pipeline.yml"
     vars:
-        release-branch: "((.:branch-config.release-branch-name))"
+        release-branch: "((.:release-branch.release-branch-name))"
     var_files: ["release/ci/vars.yml"]
 
 - name: prepare-release
@@ -86,9 +86,9 @@ jobs:
   - get: version
     params: {pre: rc}
   - task: unit
-    file: release/ci/unit/unit.yml
+    file: "release/ci/unit/unit.yml"
   - task: prepare
-    file: release/ci/prepare/prepare.yml
+    file: "release/ci/prepare/prepare.yml"
     vars:
         release-branch: "((release-branch))"
   - put: release
@@ -102,19 +102,18 @@ jobs:
   public: true
   serial_groups: [publish]
   plan:
-  - get: config
+  - get: manifest
   - get: release
     passed: [prepare-release]
   - get: version
     passed: [prepare-release]
     params: {bump: final}
-  - load_var: release-config
-    file: config/release-config.json
-    format: json
+  - load_var: release-manifest
+    file: "manifest/release-manifest.json"
     reveal: true
   - get: main
   - task: release
-    file: release/ci/release/release.yml
+    file: "release/ci/release/release.yml"
     vars:
         release-branch: "((release-branch))"
         main: "((main))"
@@ -141,7 +140,7 @@ jobs:
   - get: version
     passed: [release]
   - task: update-stable
-    file: release/ci/update/update.yml
+    file: "release/ci/update/update.yml"
     vars:
         release-branch: "((release-branch))"
         stable: "((stable))"
@@ -160,7 +159,7 @@ jobs:
   - get: version
     passed: [update-stable]
   - task: clean
-    file: release/ci/clean/clean.yml
+    file: "release/ci/clean/clean.yml"
     vars:
         release-branch: "((release-branch))"
   - put: release-base

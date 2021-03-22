@@ -8,10 +8,10 @@ inputs:
     - name: version
 outputs:
     - name: release
-    - name: branch
+    - name: release-branch
 run:
     path: main/ci/start/start.sh
     args:
     - "version/version"
-    - "((.:release-config.branch-hash))"
-    - "((.:release-config.release-branch-prefix))"
+    - "((.:release-manifest.branch-hash))"
+    - "((.:release-manifest.release-branch-prefix))"
