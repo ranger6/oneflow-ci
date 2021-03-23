@@ -154,6 +154,7 @@ jobs:
   plan:
   - get: release
     passed: [update-stable]
+    trigger: true
     params:
         fetch_tags: true
   - get: version
