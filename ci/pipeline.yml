@@ -163,7 +163,3 @@ jobs:
     file: "release/ci/clean/clean.yml"
     vars:
         release-branch: "((release-branch))"
-  - put: release-base
-    params:
-        repository: release-out
-        branch: "((release-branch))"
