@@ -70,5 +70,10 @@ The pipeline will (re-)set itself with this new variable setting and off we go!
 
 ### Removing Release Branches
 
+At present, the release branches created are not deleted by the pipeline.  This is
+due to the concourse model and implementation.  This may change in the future (with
+"prototypes"?).  For now, the "clean" job is a placeholder (with commented out code
+to indicate what we would like to do).
+
 ## Damage Control
 
