@@ -100,7 +100,6 @@ jobs:
 
 - name: release
   public: true
-  serial_groups: [publish]
   plan:
   - get: manifest
   - get: release
@@ -129,7 +128,6 @@ jobs:
 
 - name: update-stable
   public: true
-  serial_groups: [publish]
   plan:
   - get: stable
   - get: release
@@ -150,7 +148,6 @@ jobs:
 
 - name: clean
   public: true
-  serial_groups: [publish]
   plan:
   - get: release
     passed: [update-stable]
