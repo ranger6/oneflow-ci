@@ -72,10 +72,10 @@ jobs:
         repository: main
         branch: ((.:release-vars.release-branch-name))
   - set_pipeline: self
-    file: "release/ci/pipeline.yml"
+    file: "main/ci/pipeline.yml"
     vars:
         release-branch: ((.:release-vars.release-branch-name))
-    var_files: ["release/ci/vars.yml"]
+    var_files: ["main/ci/vars.yml"]
 
 - name: prepare-release
   public: true
