@@ -2,7 +2,14 @@
 
 ## Code Structure
 
+A design principle is that the "code under ci" does not include any ci specific artifacts.
+This means different ci tools can be adopted without touching the main code.
+
 ### the `ci` directory
+
+The concourse ci artifacts (pipeline and task configurations, parameters, etc.) are all
+contained in the top-level `ci` directory.  The ci artifacts depend on this placement
+of the ci directory.
 
 #### the main pipeline
 
