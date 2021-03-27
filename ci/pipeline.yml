@@ -69,7 +69,7 @@ jobs:
     params: {bump: ((.:release-manifest.release-level))}
   - put: release-base
     params:
-        repository: release
+        repository: main
         branch: ((.:release-vars.release-branch-name))
   - set_pipeline: self
     file: "release/ci/pipeline.yml"

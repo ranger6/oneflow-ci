@@ -7,7 +7,7 @@ inputs:
     - name: main
     - name: version
 outputs:
-    - name: release
+    - name: main
     - name: release-vars
 run:
     path: main/ci/start/start.sh
