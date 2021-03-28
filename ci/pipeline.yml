@@ -66,7 +66,8 @@ jobs:
     file: "release-vars/vars.json"
     reveal: true
   - put: version
-    params: {bump: ((.:release-manifest.release-level))}
+    params:
+        file: version/version
   - put: release-base
     params:
         repository: main
@@ -96,7 +97,8 @@ jobs:
         repository: release
         only_tag: true
   - put: version
-    params: {pre: rc}
+    params:
+        file: version/version
 
 - name: release
   public: true
@@ -124,7 +126,8 @@ jobs:
         repository: release
         only_tag: true
   - put: version
-    params: {bump: final}
+    params:
+        file: version/version
 
 - name: update-stable
   public: true
