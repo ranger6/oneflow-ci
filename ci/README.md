@@ -5,6 +5,10 @@
 A design principle is that the "code under ci" does not include any ci specific artifacts.
 This means different ci tools can be adopted without touching the main code.
 
+Note, however, that it might be the case that changes to the "code under ci" is modified
+during the release process.  For example, metadata (e.g. version) might be injected into "latest stable version" badges or what not.  Another example might be the automated generation of
+release notes.
+
 ### the `ci` directory
 
 The concourse ci artifacts (pipeline and task configurations, parameters, etc.) are all
