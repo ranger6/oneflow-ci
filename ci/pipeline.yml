@@ -65,13 +65,13 @@ jobs:
   - load_var: release-vars
     file: "release-vars/vars.json"
     reveal: true
-  - put: version
-    params:
-        file: version/version
   - put: release-base
     params:
         repository: main
         branch: ((.:release-vars.release-branch-name))
+  - put: version
+    params:
+        file: version/version
   - set_pipeline: self
     file: "main/ci/pipeline.yml"
     vars:
@@ -103,16 +103,16 @@ jobs:
 - name: release
   public: true
   plan:
-  - get: manifest
+  - get: main
   - get: release
     passed: [prepare-release]
+  - get: manifest
   - get: version
     passed: [prepare-release]
     params: {bump: final}
   - load_var: release-manifest
     file: "manifest/release-manifest.json"
     reveal: true
-  - get: main
   - task: release
     file: "release/ci/release/release.yml"
     vars:
