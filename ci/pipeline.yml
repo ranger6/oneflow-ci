@@ -85,7 +85,7 @@ jobs:
   - get: release
     trigger: true
   - get: version
-    params: {pre: rc}
+    params: {pre: beta}
   - task: unit
     file: "release/ci/unit/unit.yml"
   - task: prepare
