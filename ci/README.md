@@ -5,6 +5,8 @@
 A design principle is that the "code under ci" does not include any ci specific artifacts.
 This means different ci tools can be adopted without touching the main code.
 
+For now, this means that one should be able to add the `ci` directory to the `code under ci` and then adapt the pipeline tasks as needed.  More structured approaches--git sub-modules, well defined hooks in the ci tasks, etc.--might come later.
+
 Note, however, that it might be the case that changes to the "code under ci" is modified
 during the release process.  For example, metadata (e.g. version) might be injected into "latest stable version" badges or what not.  Another example might be the automated generation of
 release notes.
@@ -15,15 +17,96 @@ The concourse ci artifacts (pipeline and task configurations, parameters, etc.) 
 contained in the top-level `ci` directory.  The ci artifacts depend on this placement
 of the ci directory.
 
+One important exception to this "all in the ci directory" rule is that certain sensitive information is stored in a keystore.  This project has been tested using Vault.  Other keystores should work.  At present, the following variables are found in the keystore:
+
+-  `concourse-git-url`
+-  `concourse-git-private-key`
+
 #### the main pipeline
+
+There is a single pipeline defined in `ci/pipeline.yml`  One can name the pipeline as
+one wishes.  Here, the convention is to name it `release-pipe`.  There is no assumption
+about the user or group running the pipeline.  Note, however, that the placement/naming
+of secrets in the keystore may depend on this and/or the pipeline name.
 
 #### the tasks
 
+All tasks are factored out of the pipeline by using separate task definition files.  These
+files invoke shell scripts.  Each task has its own sub-directory in `ci`.  The naming is
+more or less consistent: the job names in the pipeline have names "close" to the
+names of task they invoke.
+
+|job name|task(s) invoked|task definition|shell script|
+--- | --- | --- | ---
+start-release | start | start/start.yml | start/start.sh
+prepare-release | unit, prepare | unit/unit.yml, prepare/prepare.yml | unit/unit.sh, prepare/prepare.sh
+release | release | release/release.yml | release/release.sh
+update-stable | update-stable | update/update.yml | update/update.sh
+clean | clean | clean/clean.yml | clean/clean.sh
+
+The shell scripts are invoked at the top level.  That is, the `dir-path` is not set.
+
 ### `ci` code used for the release
+
+The ci code is, of course, versioned.  When a new release branch is created from
+a specific commit, the ci code used is the version on that branch.  This supports well
+defined and repeatable builds (well, releases).
+
+The release branch, once created, is available as the `release` resource. Hence, one
+sees the references to task definition files and scripts in the form of
+`./release/ci/<task-dir>/<file>`.
+
+As explained below, the release branch is created by the pipeline (in `start-release`).
+Then, where does the code for the `start` task come from?  That is, what version (commit) of
+`start/start.yml` or `start/start.sh` is
+used when the `start` task is executed in the main pipeline?
+The answer is "the most recent version from the `main` resource (often the `main`, `master`, or
+`develop` branch depending on name preferences)."  This might not be code identical
+to the `start/start.sh` on the (to be created) release branch.  It might be "well ahead"
+of the commit where the release branch will start.
+
+This is a bootstrap issue.  Hence, the `start` definitions and scripts should be
+"handled with care" in order to preserve repeatable and auditable builds.  The start job needs
+to create the new release branch according to the manifest and then set the pipeline
+using the version on that new branch.
+
+In fact, it is even a bit more complicated than this. As the `release-pipe` is
+set after creating the release branch (see the final step in the `start-release`
+job in `ci/pipeline.yml`), it is this pipeline setting that not only produces the release;
+it also waits for the next `manifest` to appear for the *subsequent* release.  Of course,
+the pipeline can be re-set using `fly` at any point.  Fortunately, one is not
+tied to the pipeline definition from the last release in order to kick off the
+next release!
+
+Tricky code: the `set_pipeline` step in `start-release` references the `main` resource
+(rather than the `release` resource .. which is not even well defined at this point).
+However, it is not designating the tip of this branch!  The new release branch was
+created by checking out the commit hash given in the manifest in the `start` task.
+
+As a practical matter when releases only show up weeks or months apart, keeping
+the `release-pipe` running does not make sense.  Might as well kick off the
+pipeline when it's time to start the release process.  If releases are coming
+one after another, then having the previous pipeline definition kick off the
+next is also not a problem: it is doubtful that the bootstrap process is changing
+at this pace, so nothing breaks even if the rest of the ci code changing.
+
+As well, the "oneflow" model is predicated on "one release at a time" and a "single sequence of releases".  This is not a pipeline that keeps track of multiple releases
+in progress and the
+confusion attendant with having the right version of the ci for each one.
 
 ### Using `ci` for Real Stuff
 
-- no ci data in the main code (but "version.txt")
+Assuming that the `ci` directory does not already exist in a project/repo and
+one wishes to add this "oneflow" release code to the project, the steps are
+straightforward:
+
+1.  Copy the ci directory at the top level.
+2.  Follow the steps outlined below for "Initial Setup"
+3.  Adapt the shell scripts as needed.  For example, replace the dummy `unit.sh` script
+with real unit tests; decide what metadata needs to be injected into the "code under ci".
+4.  Edit the scripts: change the git option setting as needed.
+
+If there is other ci code, then more significant integration is needed (TODO: remove top-level dependencies).
 
 ## Parameters and Variables
 
