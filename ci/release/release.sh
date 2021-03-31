@@ -14,7 +14,7 @@ main_branch="$3"
 echo "$target_version" > tags/name
 echo "tagging release at $target_version" > tags/annotation
 
-cd ../main
+cd main
 
 git config --global user.email "ranger6@users.noreply.github.com"
 git config --global user.name "ranger6"
