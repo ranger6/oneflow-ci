@@ -1,5 +1,5 @@
 {
-	"branch-hash": "5ac6953",
+	"branch-hash": "dd41fdd",
 	"release-branch-prefix": "release/",
-	"release-level": "minor"
+	"release-level": "patch"
 }
