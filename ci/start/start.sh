@@ -15,8 +15,8 @@ echo "{\"release-branch-name\": \"${release_branch}\"}" > release-vars/vars.json
 
 cd main
 
-git config --global user.email "ranger6@users.noreply.github.com"
-git config --global user.name "ranger6"
+# git config --global user.email "ranger6@users.noreply.github.com"
+# git config --global user.name "ranger6"
 
 git checkout -b "$release_branch" "$branch_hash"
 
