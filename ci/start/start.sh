@@ -8,6 +8,8 @@ set -ex
 target_version="$(cat $1)"
 branch_hash="$2"
 release_branch_prefix="$3"
+git_user_name="$4"
+git_user_email="$5"
 
 release_branch="${release_branch_prefix}${target_version}"
 
@@ -15,8 +17,8 @@ echo "{\"release-branch-name\": \"${release_branch}\"}" > release-vars/vars.json
 
 cd main
 
-# git config --global user.email "ranger6@users.noreply.github.com"
-# git config --global user.name "ranger6"
+git config --global user.name "$git_user_name"
+git config --global user.email "$git_user_email"
 
 git checkout -b "$release_branch" "$branch_hash"
 
