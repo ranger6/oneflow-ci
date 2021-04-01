@@ -4,6 +4,7 @@ image_resource:
     type: docker-image
     source: {repository: ranger6/alpine-extras, tag: "3.13"}
 inputs:
+    - name: release
     - name: version
 outputs:
     - name: tags
