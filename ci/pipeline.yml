@@ -39,6 +39,11 @@ resources:
     uri: ((concourse-git-url))
     branch: ((release-branch))
     private_key: ((concourse-git-private-key))
+    git_config:
+    - name: user.name
+      value: "ranger6"
+    - name: user.email
+      value: "ranger6@users.noreply.github.com"
 
 - name: release-base
   type: git
