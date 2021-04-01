@@ -3,3 +3,5 @@ main-branch: develop
 stable-branch: master
 version-branch: version
 manifest-branch: version
+git-user-name: ranger6
+git-user-email: ranger6@users.noreply.github.com

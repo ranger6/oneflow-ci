@@ -25,6 +25,11 @@ resources:
     uri: ((concourse-git-url))
     branch: ((main-branch))
     private_key: ((concourse-git-private-key))
+    git_config:
+    - name: user.name
+      value: "((git-user-name))"
+    - name: user.email
+      value: "((git-user-email))"
 
 - name: stable
   type: git
@@ -32,6 +37,11 @@ resources:
     uri: ((concourse-git-url))
     branch: ((stable-branch))
     private_key: ((concourse-git-private-key))
+    git_config:
+    - name: user.name
+      value: "((git-user-name))"
+    - name: user.email
+      value: "((git-user-email))"
 
 - name: release
   type: git
@@ -41,9 +51,9 @@ resources:
     private_key: ((concourse-git-private-key))
     git_config:
     - name: user.name
-      value: "ranger6"
+      value: "((git-user-name))"
     - name: user.email
-      value: "ranger6@users.noreply.github.com"
+      value: "((git-user-email))"
 
 - name: release-base
   type: git
@@ -51,6 +61,11 @@ resources:
     uri: ((concourse-git-url))
     branch: ((release-branch))
     private_key: ((concourse-git-private-key))
+    git_config:
+    - name: user.name
+      value: "((git-user-name))"
+    - name: user.email
+      value: "((git-user-email))"
 
 jobs:
 - name: start-release
