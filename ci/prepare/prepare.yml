@@ -5,9 +5,8 @@ image_resource:
     source: {repository: ranger6/alpine-extras, tag: "3.13"}
 inputs:
     - name: version
-    - name: release
 outputs:
-    - name: release
+    - name: tags
 run:
     path: ./release/ci/prepare/prepare.sh
-    args: ['version/version', "((release-branch))"]
+    args: ['version/version']

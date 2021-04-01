@@ -78,23 +78,31 @@ jobs:
         release-branch: ((.:release-vars.release-branch-name))
     var_files: ["main/ci/vars.yml"]
 
-- name: prepare-release
+- name: unit-test
   public: true
   serial_groups: [publish]
   plan:
   - get: release
     trigger: true
-  - get: version
-    params: {pre: rc}
   - task: unit
     file: "release/ci/unit/unit.yml"
+
+- name: prepare-release
+  public: true
+  plan:
+  - get: release
+    passed: [unit-test]
+    trigger: true
+  - get: version
+    passed: [start-release]
+    params: {pre: rc}
   - task: prepare
     file: "release/ci/prepare/prepare.yml"
-    vars:
-        release-branch: "((release-branch))"
   - put: release
     params:
         repository: release
+        tag: "tags/name"
+        annotate: "tags/annotation"
         only_tag: true
   - put: version
     params:

@@ -6,13 +6,6 @@
 set -ex
 
 target_version="$(cat $1)"
-release_branch="$2"
 
-cd release
-
-git config --global user.email "ranger6@users.noreply.github.com"
-git config --global user.name "ranger6"
-
-git checkout "$release_branch"
-
-git tag -a -m "tagging pre-release at $target_version" "$target_version"
+echo "$target_version" > tags/name
+echo "tagging pre-release at $target_version" > tags/annotation
