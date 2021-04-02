@@ -149,6 +149,8 @@ jobs:
     vars:
         release-branch: "((release-branch))"
         main-branch: "((main-branch))"
+        git-user-name: "((git-user-name))"
+        git-user-email: "((git-user-email))"
   - put: main
     params:
         repository: main
@@ -178,6 +180,8 @@ jobs:
     vars:
         release-branch: "((release-branch))"
         stable-branch: "((stable-branch))"
+        git-user-name: "((git-user-name))"
+        git-user-email: "((git-user-email))"
   - put: stable
     params:
         repository: stable
@@ -196,3 +200,5 @@ jobs:
     file: "release/ci/clean/clean.yml"
     vars:
         release-branch: "((release-branch))"
+        git-user-name: "((git-user-name))"
+        git-user-email: "((git-user-email))"

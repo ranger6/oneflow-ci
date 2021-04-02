@@ -12,4 +12,9 @@ outputs:
     - name: main
 run:
     path: ./release/ci/release/release.sh
-    args: ['version/version', "((release-branch))", "((main-branch))"]
+    args:
+    - 'version/version'
+    - "((release-branch))"
+    - "((main-branch))"
+    - "((git-user-name))"
+    - "((git-user-email))"

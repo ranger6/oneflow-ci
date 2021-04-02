@@ -11,4 +11,9 @@ outputs:
     - name: stable
 run:
     path: "./release/ci/update/update.sh"
-    args: ['version/version',"((release-branch))","((stable-branch))"]
+    args:
+    - 'version/version'
+    - "((release-branch))"
+    - "((stable-branch))"
+    - "((git-user-name))"
+    - "((git-user-email))"

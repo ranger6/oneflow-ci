@@ -7,6 +7,8 @@ set -ex
 
 target_version="$(cat $1)"
 release_branch="$2"
+git_user_name="$3"
+git_user_email="$4"
 
 # git clone release release-out
 # cd release-out

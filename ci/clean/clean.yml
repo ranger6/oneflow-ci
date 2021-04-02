@@ -10,4 +10,8 @@ outputs:
     - name: release-out
 run:
     path: ./release/ci/clean/clean.sh
-    args: ['version/version',"((release-branch))"]
+    args:
+    - 'version/version'
+    - "((release-branch))"
+    - "((git-user-name))"
+    - "((git-user-email))"
