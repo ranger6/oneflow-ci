@@ -174,7 +174,7 @@ jobs:
   plan:
   - get: stable
   - get: release
-    passed: [release, merge-main]
+    passed: [release]
     trigger: true
     params:
         fetch_tags: true
