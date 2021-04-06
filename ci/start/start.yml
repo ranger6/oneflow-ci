@@ -15,5 +15,3 @@ run:
     - "version/version"
     - "((.:release-manifest.branch-hash))"
     - "((.:release-manifest.release-branch-prefix))"
-    - "((git-user-name))"
-    - "((git-user-email))"

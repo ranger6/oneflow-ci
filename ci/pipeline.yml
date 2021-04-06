@@ -82,9 +82,6 @@ jobs:
     params: {bump: ((.:release-manifest.release-level))}
   - task: start
     file: "main/ci/start/start.yml"
-    vars:
-        git-user-name: "((git-user-name))"
-        git-user-email: "((git-user-email))"
   - load_var: release-vars
     file: "release-vars/vars.json"
     reveal: true
