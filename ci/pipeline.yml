@@ -137,13 +137,9 @@ jobs:
   - get: main
   - get: release
     passed: [prepare-release]
-  - get: manifest
   - get: version
     passed: [prepare-release]
     params: {bump: final}
-  - load_var: release-manifest
-    file: "manifest/release-manifest.json"
-    reveal: true
   - task: release
     file: "release/ci/release/release.yml"
     vars:
