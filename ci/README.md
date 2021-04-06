@@ -39,9 +39,11 @@ names of task they invoke.
 |job name|task(s) invoked|task definition|shell script|
 --- | --- | --- | ---
 start-release | start | start/start.yml | start/start.sh
-prepare-release | unit, prepare | unit/unit.yml, prepare/prepare.yml | unit/unit.sh, prepare/prepare.sh
+unit-test | unit | unit/unit.yml | unit/unit.sh
+prepare-release | prepare | prepare/prepare.yml | prepare/prepare.sh
 release | release | release/release.yml | release/release.sh
-update-stable | update-stable | update/update.yml | update/update.sh
+update-stable | update | update/update.yml | update/update.sh
+merge-main | merge | merge/merge.yml | merge/merge.sh
 clean | clean | clean/clean.yml | clean/clean.sh
 
 The shell scripts are invoked at the top level.  That is, the `dir-path` is not set.
@@ -66,7 +68,7 @@ to the `start/start.sh` on the (to be created) release branch.  It might be "wel
 of the commit where the release branch will start.
 
 This is a bootstrap issue.  Hence, the `start` definitions and scripts should be
-"handled with care" in order to preserve repeatable and auditable builds.  The start job needs
+"handled with care" in order to preserve repeatable and auditable builds.  The `start-release` job needs
 to create the new release branch according to the manifest and then set the pipeline
 using the version on that new branch.
 
@@ -83,7 +85,7 @@ Tricky code: the `set_pipeline` step in `start-release` references the `main` re
 However, it is not designating the tip of this branch!  The new release branch was
 created by checking out the commit hash given in the manifest in the `start` task.
 
-As a practical matter when releases only show up weeks or months apart, keeping
+As a practical matter, when releases only show up weeks or months apart, keeping
 the `release-pipe` running does not make sense.  Might as well kick off the
 pipeline when it's time to start the release process.  If releases are coming
 one after another, then having the previous pipeline definition kick off the
@@ -103,8 +105,8 @@ straightforward:
 1.  Copy the ci directory at the top level.
 2.  Follow the steps outlined below for "Initial Setup"
 3.  Adapt the shell scripts as needed.  For example, replace the dummy `unit.sh` script
-with real unit tests; decide what metadata needs to be injected into the "code under ci".
-4.  Edit the scripts: change the git option setting as needed.
+with real unit tests; decide what metadata, if any, needs to be injected
+into the "code under ci".
 
 If there is other ci code, then more significant integration is needed (TODO: remove top-level dependencies).
 
@@ -112,7 +114,13 @@ If there is other ci code, then more significant integration is needed (TODO: re
 
 ## Initial Setup
 
-Once the parameters for branch naming have been determined, one
+Besides defining the branch names in `ci/vars.yml` as described above, other
+variables might be defined there.  At present, two git option values are defined:
+
+-  git-user-name
+-  git-user-email
+
+One
 needs to insure that a certain amount of source (repo) configuration
 is done:
 

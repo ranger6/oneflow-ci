@@ -180,7 +180,7 @@ jobs:
         fetch_tags: true
   - get: version
     passed: [release]
-  - task: update-stable
+  - task: update
     file: "release/ci/update/update.yml"
     vars:
         release-branch: "((release-branch))"
