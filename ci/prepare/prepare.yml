@@ -2,12 +2,12 @@
 platform: linux
 image_resource:
     type: docker-image
-    source: {repository: ranger6/alpine-extras, tag: "3.13"}
+    source: {repository: busybox}
 inputs:
     - name: release
     - name: version
 outputs:
     - name: tags
 run:
-    path: ./release/ci/prepare/prepare.sh
+    path: "release/ci/prepare/prepare.sh"
     args: ['version/version']

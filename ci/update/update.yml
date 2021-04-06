@@ -10,7 +10,7 @@ inputs:
 outputs:
     - name: stable
 run:
-    path: "./release/ci/update/update.sh"
+    path: "release/ci/update/update.sh"
     args:
     - 'version/version'
     - "((release-branch))"

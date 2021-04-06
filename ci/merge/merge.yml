@@ -9,7 +9,7 @@ inputs:
 outputs:
     - name: main
 run:
-    path: ./release/ci/merge/merge.sh
+    path: "release/ci/merge/merge.sh"
     args:
     - "((release-branch))"
     - "((main-branch))"

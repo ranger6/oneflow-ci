@@ -157,6 +157,7 @@ jobs:
   - get: main
   - get: release
     passed: [release]
+    trigger: true
   - task: merge
     file: "release/ci/merge/merge.yml"
     vars:

@@ -6,4 +6,4 @@ image_resource:
 inputs:
     - name: release
 run:
-    path: ./release/ci/unit/unit.sh
+    path: "release/ci/unit/unit.sh"
