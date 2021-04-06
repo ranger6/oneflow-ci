@@ -5,7 +5,7 @@
 A design principle is that the "code under ci" does not include any ci specific artifacts.
 This means different ci tools can be adopted without touching the main code.
 
-For now, this means that one should be able to add the `ci` directory to the `code under ci` and then adapt the pipeline tasks as needed.  More structured approaches--git sub-modules, well defined hooks in the ci tasks, etc.--might come later.
+For now, this means that one should be able to add the `ci` directory to the "code under ci" and then adapt the pipeline tasks as needed.  More structured approaches--git sub-modules, well defined hooks in the ci tasks, etc.--might come later.
 
 Note, however, that it might be the case that changes to the "code under ci" is modified
 during the release process.  For example, metadata (e.g. version) might be injected into "latest stable version" badges or what not.  Another example might be the automated generation of
@@ -34,7 +34,7 @@ of secrets in the keystore may depend on this and/or the pipeline name.
 All tasks are factored out of the pipeline by using separate task definition files.  These
 files invoke shell scripts.  Each task has its own sub-directory in `ci`.  The naming is
 more or less consistent: the job names in the pipeline have names "close" to the
-names of task they invoke.
+names of the task they invoke.
 
 |job name|task(s) invoked|task definition|shell script|
 --- | --- | --- | ---
@@ -64,8 +64,8 @@ Then, where does the code for the `start` task come from?  That is, what version
 used when the `start` task is executed in the main pipeline?
 The answer is "the most recent version from the `main` resource (often the `main`, `master`, or
 `develop` branch depending on name preferences)."  This might not be code identical
-to the `start/start.sh` on the (to be created) release branch.  It might be "well ahead"
-of the commit where the release branch will start.
+to the `start/start.sh` on the (to be created) release branch.  It might be well ahead
+or behind that of the commit where the release branch will start.
 
 This is a bootstrap issue.  Hence, the `start` definitions and scripts should be
 "handled with care" in order to preserve repeatable and auditable builds.  The `start-release` job needs
