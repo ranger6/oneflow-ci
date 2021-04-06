@@ -25,7 +25,7 @@ git checkout -b "$release_branch" "$branch_hash"
 #	this is a placeholder action for what might need
 #	to be done when preparing a new release.
 
-echo $target_version > version.txt
+# echo $target_version > version.txt
 
-git add .
-git commit -m "starting new release branch \"$release_branch\" for target version \"$target_version\""
+# git add .
+# git commit -m "starting new release branch \"$release_branch\" for target version \"$target_version\""
