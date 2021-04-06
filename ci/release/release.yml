@@ -6,15 +6,9 @@ image_resource:
 inputs:
     - name: version
     - name: release
-    - name: main
 outputs:
     - name: tags
-    - name: main
 run:
     path: ./release/ci/release/release.sh
     args:
     - 'version/version'
-    - "((release-branch))"
-    - "((main-branch))"
-    - "((git-user-name))"
-    - "((git-user-email))"
