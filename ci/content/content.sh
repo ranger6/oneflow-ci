@@ -9,4 +9,4 @@ release_branch="$2"
 
 cd main
 
-git checkout -b "$release_branch" "$branch_hash"
+git checkout "$release_branch"
