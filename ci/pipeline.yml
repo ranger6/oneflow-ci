@@ -80,11 +80,13 @@ jobs:
     reveal: true
   - get: version
     params: {bump: ((.:release-manifest.release-level))}
-  - task: start
-    file: "main/ci/start/start.yml"
+  - task: branch
+    file: "main/ci/branch/branch.yml"
   - load_var: release-vars
     file: "release-vars/vars.json"
     reveal: true
+  - task: content
+    file: "main/ci/content/content.yml"
   - put: release-base
     params:
         repository: main

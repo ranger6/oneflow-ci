@@ -1,7 +1,7 @@
 #!/bin/sh
 
-#       start -- when triggered, start new release branch
-#                put release branch name in vars.json so that it can be load_var'ed
+#       branch -- start new release branch
+#                 put release branch name in vars.json so that it can be load_var'ed
 
 set -ex
 

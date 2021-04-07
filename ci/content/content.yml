@@ -1,0 +1,15 @@
+---
+platform: linux
+image_resource:
+    type: docker-image
+    source: {repository: ranger6/alpine-extras, tag: "3.13"}
+inputs:
+    - name: main
+    - name: version
+outputs:
+    - name: main
+run:
+    path: "main/ci/content/content.sh"
+    args:
+    - "version/version"
+    - "((.:release-vars.release-branch-name))"
