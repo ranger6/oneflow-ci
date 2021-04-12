@@ -120,15 +120,15 @@ jobs:
     params: {pre: rc}
   - task: prepare
     file: "release/ci/prepare/prepare.yml"
+  - put: version
+    params:
+        file: version/version
   - put: release
     params:
         repository: release
         tag: "tags/name"
         annotate: "tags/annotation"
         only_tag: true
-  - put: version
-    params:
-        file: version/version
 
 - name: release
   public: true
