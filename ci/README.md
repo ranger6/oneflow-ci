@@ -134,7 +134,7 @@ be a good choice.
 2.  The branches used for the release manifest and semantic version string
 must not be on the main branch.  They should be on "orphan" branches.  It
 is fine to use the same branch for both the manifest and the semver.  See
-[Version Setup](./Version_Setup.md) for an example.
+[VERSION SETUP](./VERSION_SETUP.md) for an example.
 
 3.  You will need `concourse` running before you can start a pipeline. See
 [concourse-docker](https://github.com/ranger6/concourse-docker) for one
