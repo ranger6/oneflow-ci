@@ -116,7 +116,6 @@ jobs:
     passed: [unit-test]
     trigger: true
   - get: version
-    passed: [start-release]
     params: {pre: rc}
   - task: prepare
     file: "release/ci/prepare/prepare.yml"
