@@ -168,6 +168,19 @@ The pipeline will (re-)set itself with this new variable setting and off we go!
 
 ## Creating a Release
 
+It is easier to understand the process of creating a release if you first read the [oneflow](https://www.endoflineblog.com/oneflow-a-git-branching-model-and-workflow) article.  The
+concourse pipeline essentially automates this process.
+
+However, making a release *does* require human intervention.  No, not every push is a release.
+
+### The Human Process
+
+1.  Identify the release.
+2.  Create the release manifest.
+3.  Iterate over release candidates.
+4.  Open the release gate.
+5.  Remove the release branch (should not be necessary).
+
 ### Release Candidate Sequence
 
 ### Removing Release Branches
