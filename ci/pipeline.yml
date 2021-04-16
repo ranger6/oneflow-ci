@@ -87,6 +87,9 @@ jobs:
     reveal: true
   - task: content
     file: "main/ci/content/content.yml"
+    vars:
+        git-user-name: "((git-user-name))"
+        git-user-email: "((git-user-email))"
   - put: release-base
     params:
         repository: main

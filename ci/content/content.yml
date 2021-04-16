@@ -13,3 +13,5 @@ run:
     args:
     - "version/version"
     - "((.:release-vars.release-branch-name))"
+    - "((git-user-name))"
+    - "((git-user-email))"
