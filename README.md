@@ -25,7 +25,7 @@ latest release. This is *one* suggestion for "oneflow" naming.
 3.  The "version" branch is used by the ci pipeline as the external source
 of truth for the semver version.  It is also where the
 release manifest is published to trigger new releases.  This is *not* part
-of oneflow.
+of oneflow. It supports the concourse pipeline.
 4.  Release branches get created, but should be removed once the final release
 is tagged and merged back into master.  However, this is not yet automated so
 one may find multiple garbage branches.
