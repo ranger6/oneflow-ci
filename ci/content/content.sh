@@ -10,3 +10,7 @@ release_branch="$2"
 cd main
 
 git checkout "$release_branch"
+
+echo $target_version > version.txt
+git add .
+git commit -m "updating version info to $target_version"
