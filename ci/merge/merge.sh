@@ -1,6 +1,9 @@
 #!/bin/sh
 
 #       merge -- merge release branch back into the main branch
+#		 The magic merge happens with the "pull" from a repo with
+#		 the release branch cloned (../release) to the repo with
+#		 the main branch checked out.
 
 set -ex
 
