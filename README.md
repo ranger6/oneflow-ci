@@ -19,10 +19,10 @@ Below is a somewhat higher level description of the approach.
 
 ### branches
 
-1.  The `main` development branch is "develop" (following the convention in oneflow).
-2.  The `stable` branch is "master".  The tip of master always points to the
+1.  The `main` development branch is `develop` (following the convention in oneflow).
+2.  The `stable` branch is `master`.  The tip of master always points to the
 latest release. This is *one* suggestion for "oneflow" naming.
-3.  The "version" branch is used by the ci pipeline as the external source
+3.  The `version` branch is used by the ci pipeline as the external source
 of truth for the semver version.  It is also where the
 release manifest is published to trigger new releases.  This is *not* part
 of oneflow. It supports the concourse pipeline.
@@ -32,13 +32,13 @@ one may find multiple garbage branches.
 
 Because people may want to use different names for branches in oneflow, the branch
 names are factored out from the concourse resources. The coorespondance is
-captured in `ci/vars.json`.  For *this* repo, we use "develop" and "master" as
-the two long-lived branches.  We use "version" to store the release manifests
+captured in `ci/vars.json`.  For *this* repo, we use `develop` and `master` as
+the two long-lived branches.  We use `version` to store the release manifests
 and the semver version string. The release branches are dynamically created and
 are short lived.
 
 Here then, is the mapping used for this repo (again, see `ci/vars.yml`).  If you
-want to use different branch names, then just change the "branch-name"!
+want to use different branch names, then just change the `branch-name`!
 
 |resource |resource-branch |branch-name |
 --- | --- | ---
@@ -63,20 +63,20 @@ tagged with the "final" release string.
 
 "release-pipe" is mostly linear:
 
-1.  New release manifests pushed to the version branch trigger the "start-release" job.
+1.  New release manifests pushed to the version branch trigger the `start-release` job.
 It creates a new release branch and sets the "version" semver to the next *target* version.
 2.  It then sets `self` to an updated version of `ci/pipeline.yml`  Often, the code does not change.
-Only the "release-branch" variable is changed to the just generated release branch.  That is,
-the "release" resource is following the newly created release branch.
-3.  New versions (commits) on the release branch trigger "unit-test".
-4.  If tests pass, a new release candidate is tagged ("prepare-release").
-5.  When someone decides that all is ok, the "release" job is manually triggered.
-6.  "release" tags the latest release candidate with the final target release string.
+Only the `release-branch` variable is changed to the just generated release branch.  That is,
+the `release` resource is following the newly created release branch.
+3.  New versions (commits) on the release branch trigger `unit-test`.
+4.  If tests pass, a new release candidate is tagged (`prepare-release`).
+5.  When someone decides that all is ok, the `release` job is manually triggered.
+6.  `release` tags the latest release candidate with the final target release string.
 The version semvar is promoted to the "final" value.
-7.  "merge-main" merges the release branch back to the main branch.
-7.  A new release triggers "update-stable" that fast-forwards the stable branch
+7.  `merge-main` merges the release branch back to the main branch.
+7.  A new release triggers `update-stable` that fast-forwards the stable branch
 to the new release tag.
-8.  "clean" should then delete the release branch (not working yet; may never work
+8.  `clean` should then delete the release branch (not working yet; may never work
 in concourse; is currently a dummy job).
 
 ## dependencies

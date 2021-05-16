@@ -70,7 +70,7 @@ resources:
 jobs:
 - name: start-release
   public: true
-  serial_groups: [publish]
+  serial_groups: [release]
   plan:
   - get: manifest
     trigger: true
@@ -80,16 +80,19 @@ jobs:
     reveal: true
   - get: version
     params: {bump: ((.:release-manifest.release-level))}
+
   - task: branch
     file: "main/ci/branch/branch.yml"
   - load_var: release-vars
     file: "release-vars/vars.json"
     reveal: true
+
   - task: content
     file: "main/ci/content/content.yml"
     vars:
         git-user-name: "((git-user-name))"
         git-user-email: "((git-user-email))"
+
   - put: release-base
     params:
         repository: main
@@ -97,20 +100,23 @@ jobs:
   - put: version
     params:
         file: version/version
+
   - set_pipeline: self
     file: "main/ci/pipeline.yml"
     vars:
         release-branch: ((.:release-vars.release-branch-name))
     var_files: ["main/ci/vars.yml"]
 
+
 - name: unit-test
   public: true
-  serial_groups: [publish]
+  serial_groups: [release]
   plan:
   - get: release
     trigger: true
   - task: unit
     file: "release/ci/unit/unit.yml"
+
 
 - name: prepare-release
   public: true
@@ -120,8 +126,10 @@ jobs:
     trigger: true
   - get: version
     params: {pre: rc}
+
   - task: prepare
     file: "release/ci/prepare/prepare.yml"
+
   - put: version
     params:
         file: version/version
@@ -131,6 +139,7 @@ jobs:
         tag: "tags/name"
         annotate: "tags/annotation"
         only_tag: true
+
 
 - name: release
   public: true
@@ -140,8 +149,10 @@ jobs:
   - get: version
     passed: [prepare-release]
     params: {bump: final}
+
   - task: release
     file: "release/ci/release/release.yml"
+
   - put: version
     params:
         file: version/version
@@ -152,6 +163,7 @@ jobs:
         annotate: "tags/annotation"
         only_tag: true
 
+
 - name: merge-main
   public: true
   plan:
@@ -159,6 +171,7 @@ jobs:
   - get: release
     passed: [release]
     trigger: true
+
   - task: merge
     file: "release/ci/merge/merge.yml"
     vars:
@@ -166,9 +179,11 @@ jobs:
         main-branch: "((main-branch))"
         git-user-name: "((git-user-name))"
         git-user-email: "((git-user-email))"
+
   - put: main
     params:
         repository: main
+
 
 - name: update-stable
   public: true
@@ -181,6 +196,7 @@ jobs:
         fetch_tags: true
   - get: version
     passed: [release]
+
   - task: update
     file: "release/ci/update/update.yml"
     vars:
@@ -188,9 +204,11 @@ jobs:
         stable-branch: "((stable-branch))"
         git-user-name: "((git-user-name))"
         git-user-email: "((git-user-email))"
+
   - put: stable
     params:
         repository: stable
+
 
 - name: clean
   public: true
@@ -202,6 +220,7 @@ jobs:
         fetch_tags: true
   - get: version
     passed: [update-stable]
+
   - task: clean
     file: "release/ci/clean/clean.yml"
     vars:

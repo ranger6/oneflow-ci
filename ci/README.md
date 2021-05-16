@@ -29,6 +29,45 @@ one wishes.  Here, the convention is to name it `release-pipe`.  There is no ass
 about the user or group running the pipeline.  Note, however, that the placement/naming
 of secrets in the keystore may depend on this and/or the pipeline name.
 
+#### the resources
+
+With the exception of `version`, the ("git") resources track branches from a single repository.
+The `version` resource is a `semver`.
+
+The long lived branches and their corresponding resources
+are described in the [main readme](../README.md) file.
+
+Two resources are used to track the (dynamically created) release branch.
+
+|resource |resource-branch |branch-name |
+--- | --- | ---
+|release|release-branch|\<prefix\>/\<version\>|
+|release-base|release-branch|\<prefix\>/\<version\>|
+
+`release` is used to track commits (i.e. resource versions) that "move" through
+the pipeline in a conventional manner. `release-base`, on the other hand, is
+used only by the "start-release" job to write the new release branch and
+optional release contents to
+the `main` repository. This is admittedly tricky, but is needed because:
+
+1.  The `release` resource has not been correctly defined at this point.  It becomes defined
+only after the `set_pipeline` step is performed.
+2.  To avoid the `unit-test` job running multiple times when the release branch is
+first created (once when the branch is created, a second time when a `content`
+commit is made to the branch), the `release` resource must discover (i.e. `check`)
+the newly created branch only after it is "stable".  So, the sequence is:
+
+    a. create the branch in the `branch` task
+
+    b. commit any new content to this branch in the `content` task
+
+    c. `put` this new branch via the `release-base` resource
+
+    d. set the pipeline with the new release branch name used to parameterize the `release` resource.
+
+    e. the subsequent `check` by the (newly set/parameterized) `release` resource should discover the latest version of the new release branch
+
+
 #### the tasks
 
 All tasks are factored out of the pipeline by using separate task definition files.  These
@@ -38,13 +77,13 @@ names of the task they invoke.
 
 |job name|task(s) invoked|task definition|shell script|
 --- | --- | --- | ---
-start-release | start | start/start.yml | start/start.sh
-unit-test | unit | unit/unit.yml | unit/unit.sh
-prepare-release | prepare | prepare/prepare.yml | prepare/prepare.sh
-release | release | release/release.yml | release/release.sh
-update-stable | update | update/update.yml | update/update.sh
-merge-main | merge | merge/merge.yml | merge/merge.sh
-clean | clean | clean/clean.yml | clean/clean.sh
+start-release | branch, content | branch/branch.yml, content/content.yml | branch.sh, content.sh
+unit-test | unit | unit/unit.yml | unit.sh
+prepare-release | prepare | prepare/prepare.yml | prepare.sh
+release | release | release/release.yml | release.sh
+update-stable | update | update/update.yml | update.sh
+merge-main | merge | merge/merge.yml | merge.sh
+clean | clean | clean/clean.yml | clean.sh
 
 The shell scripts are invoked at the top level.  That is, the `dir-path` is not set.
 
@@ -105,8 +144,10 @@ straightforward:
 1.  Copy the ci directory at the top level.
 2.  Follow the steps outlined below for "Initial Setup"
 3.  Adapt the shell scripts as needed.  For example, replace the dummy `unit.sh` script
-with real unit tests; decide what metadata, if any, needs to be injected
-into the "code under ci".
+with real unit tests
+4.  There are two "placeholders" for injecting project/repo specific logic:
+    a. Modification of the "content.sh" script that is executed as part of the `start-release` job.  This is where where release-specific content can be added to the code base.  This task is run once per release.
+    b. Addition of pipeline stages between `unit-test` and `prepare-release`.  Each stage should consume/pass the `release` and `version` resource version streams, normally triggering on a new `release` version.
 
 If there is other ci code, then more significant integration is needed (TODO: remove top-level dependencies).
 
@@ -120,8 +161,7 @@ variables might be defined there.  At present, two git option values are defined
 -  git-user-name
 -  git-user-email
 
-One
-needs to insure that a certain amount of source (repo) configuration
+One needs to insure that a certain amount of source (repo) configuration
 is done:
 
 1.  Of course, the long running branches used by "oneflow" need to exist.
