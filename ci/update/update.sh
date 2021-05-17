@@ -12,8 +12,8 @@ git_user_email="$5"
 
 cd stable
 
-git config --global user.name "$git-user-name"
-git config --global user.email "$git-user-name"
+git config --global user.name "$git_user_name"
+git config --global user.email "$git_user_email"
 
 git checkout $stable_branch
 git remote add -f --tags -t "$release_branch" release ../release
